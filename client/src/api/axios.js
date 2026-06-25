@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://isp-manager-n5us.onrender.com',
+  baseURL: import.meta.env.VITE_API_URL || 'https://isp-manager-n5us.onrender.com/',
   withCredentials: true, // send HTTP-only cookies
   headers: {
     'Content-Type': 'application/json',
