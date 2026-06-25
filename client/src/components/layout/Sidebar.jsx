@@ -5,7 +5,7 @@ import {
   Wifi, LogOut, ChevronRight,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
-import { cn } from '../../utils/helpers'
+import { cn } from '../../utils/Helpers'
 
 const NAV = [
   { label: 'Dashboard',     icon: LayoutDashboard, to: '/' },
