@@ -1,0 +1,216 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  STAFF
+}
+
+/* -------------------- TENANTS -------------------- */
+
+model tenants {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  admins        admins[]
+  users         users[]
+  plans         plans[]
+  subscriptions subscriptions[]
+  invoices      invoices[]
+  payments      payments[]
+  ledger        ledger[]
+  notifications notifications[]
+}
+
+/* -------------------- ADMINS (AUTH USERS) -------------------- */
+
+model admins {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id     String   @db.Uuid
+  name          String
+  email         String
+  password_hash String
+  role          Role     @default(STAFF)
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  tenants       tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+
+  @@unique([tenant_id, email])
+  @@index([tenant_id])
+}
+
+/* -------------------- USERS (ISP CUSTOMERS) -------------------- */
+
+model users {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id     String   @db.Uuid
+  full_name     String
+  phone         String
+  email         String?
+  address       String?
+  city          String?
+  latitude      Float?
+  longitude     Float?
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+
+  tenants       tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+
+  invoices      invoices[]
+  ledger        ledger[]
+  notifications notifications[]
+  subscriptions subscriptions[]
+
+  @@unique([tenant_id, phone])
+  @@index([tenant_id])
+}
+
+/* -------------------- PLANS -------------------- */
+
+model plans {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id  String   @db.Uuid
+  name       String
+  speed_mbps Int
+  price      Decimal  @db.Decimal(10, 2)
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+
+  tenants       tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  subscriptions subscriptions[]
+
+  @@unique([tenant_id, name])
+  @@index([tenant_id])
+}
+
+/* -------------------- SUBSCRIPTIONS -------------------- */
+
+model subscriptions {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id         String   @db.Uuid
+  user_id           String   @db.Uuid
+  plan_id           String   @db.Uuid
+
+  custom_speed_mbps Int?
+  custom_price      Decimal? @db.Decimal(10, 2)
+  discount_amount   Decimal  @default(0) @db.Decimal(10, 2)
+
+  start_date        DateTime @db.Date
+  end_date          DateTime?
+  billing_cycle     String   @default("monthly")
+  status            String   @default("active")
+  created_at        DateTime @default(now()) @db.Timestamp(6)
+
+  tenants tenants @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  users   users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  plans   plans   @relation(fields: [plan_id], references: [id], onDelete: Cascade)
+
+  invoices invoices[]
+
+  @@index([tenant_id])
+  @@index([user_id])
+}
+
+/* -------------------- INVOICES -------------------- */
+
+model invoices {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  tenant_id          String   @db.Uuid
+  user_id            String   @db.Uuid
+  subscription_id    String   @db.Uuid
+
+  invoice_number     String
+
+  billing_month      DateTime @db.Date
+
+  amount_due         Decimal  @db.Decimal(10, 2)
+  amount_paid        Decimal  @default(0) @db.Decimal(10, 2)
+  remaining_balance  Decimal  @db.Decimal(10, 2)
+
+  discount_applied   Decimal  @default(0) @db.Decimal(10, 2)
+
+  due_date           DateTime? @db.Date
+
+  status             String   @default("unpaid")
+  // unpaid | partial | paid | cancelled
+
+  notes              String?
+
+  created_at         DateTime @default(now()) @db.Timestamp(6)
+  updated_at         DateTime @updatedAt @db.Timestamp(6)
+
+  tenants            tenants        @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  users              users          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  subscriptions      subscriptions  @relation(fields: [subscription_id], references: [id], onDelete: Cascade)
+
+  payments           payments[]
+
+  @@unique([tenant_id, invoice_number])
+
+  @@index([tenant_id])
+  @@index([user_id])
+  @@index([subscription_id])
+  @@index([status])
+}
+
+/* -------------------- PAYMENTS -------------------- */
+
+model payments {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id      String   @db.Uuid
+  invoice_id     String   @db.Uuid
+  amount_paid    Decimal  @db.Decimal(10, 2)
+  payment_method String
+  paid_at        DateTime @default(now()) @db.Timestamp(6)
+
+  tenants  tenants  @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  invoices invoices @relation(fields: [invoice_id], references: [id], onDelete: Cascade)
+
+  @@index([tenant_id])
+}
+
+/* -------------------- LEDGER -------------------- */
+
+model ledger {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id    String   @db.Uuid
+  user_id      String   @db.Uuid
+
+  type         String
+  reference_id String?
+  amount       Decimal  @db.Decimal(10, 2)
+  created_at   DateTime @default(now()) @db.Timestamp(6)
+
+  tenants tenants @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  users   users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([tenant_id])
+}
+
+/* -------------------- NOTIFICATIONS -------------------- */
+
+model notifications {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id String   @db.Uuid
+  user_id   String   @db.Uuid
+
+  type      String
+  message   String
+  status    String   @default("pending")
+  sent_at   DateTime?
+  created_at DateTime @default(now())
+
+  tenants tenants @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  users   users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([tenant_id])
+}
