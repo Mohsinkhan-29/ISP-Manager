@@ -18,7 +18,7 @@ const app = express();
 
 // Middlewares
 app.use(cors({
-  origin: "https://isp-manager-gold.vercel.app", // URL EXAMPLE: http://localhost:5173
+  origin: "https://isp-manager-gold.vercel.app/", // URL EXAMPLE: http://localhost:5173
   credentials: true
 }));
 
