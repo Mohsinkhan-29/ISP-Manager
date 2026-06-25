@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 import { invoicesApi, usersApi, subscriptionsApi } from '../../api/services'
 import { useToast } from '../../components/ui/Toast'
-import { getErrorMessage } from '../../utils/helpers'
+import { getErrorMessage } from '../../utils/Helpers'
 
 export default function InvoiceForm({ onSuccess }) {
   const toast = useToast()

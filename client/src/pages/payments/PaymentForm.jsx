@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 import { paymentsApi, invoicesApi } from '../../api/services'
 import { useToast } from '../../components/ui/Toast'
-import { formatCurrency, getErrorMessage } from '../../utils/helpers'
+import { formatCurrency, getErrorMessage } from '../../utils/Helpers'
 
 const METHODS = [
   'cash',

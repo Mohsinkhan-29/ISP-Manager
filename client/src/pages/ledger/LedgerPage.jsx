@@ -11,7 +11,7 @@ import {
 import { ledgerApi } from '../../api/services'
 import { useFetch } from '../../hooks/useFetch'
 import { Pagination } from '../../components/ui/Pagination'
-import { formatDate, formatCurrency } from '../../utils/helpers'
+import { formatDate, formatCurrency } from '../../utils/Helpers'
 
 const TYPE_TABS = ['all', 'credit', 'debit', 'invoice', 'payment', 'adjustment']
 

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Wifi, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useToast } from '../../components/ui/Toast'
-import { getErrorMessage } from '../../utils/helpers'
+import { getErrorMessage } from '../../utils/Helpers'
 
 const STATS = [
   { label: 'Active clients',  value: '1', color: 'bg-emerald-400' },

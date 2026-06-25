@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 import { subscriptionsApi, usersApi, plansApi } from '../../api/services'
 import { useToast } from '../../components/ui/Toast'
-import { getErrorMessage } from '../../utils/helpers'
+import { getErrorMessage } from '../../utils/Helpers'
 
 export default function SubscriptionForm({ onSuccess }) {
   const toast = useToast()

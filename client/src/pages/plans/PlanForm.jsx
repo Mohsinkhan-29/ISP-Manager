@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { plansApi } from '../../api/services'
 import { useToast } from '../../components/ui/Toast'
-import { getErrorMessage } from '../../utils/helpers'
+import { getErrorMessage } from '../../utils/Helpers'
 
 export default function PlanForm({ initial, onSuccess }) {
   const toast = useToast()

@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext'
 import { Pagination } from '../../components/ui/Pagination'
 import { Modal } from '../../components/ui/Modal'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
-import { formatDate, getErrorMessage } from '../../utils/helpers'
+import { formatDate, getErrorMessage } from '../../utils/Helpers'
 import AdminForm from './AdminForm'
 
 const ROLE_TABS = ['all', 'OWNER', 'ADMIN', 'STAFF']

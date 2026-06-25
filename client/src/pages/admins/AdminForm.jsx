@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { adminsApi } from '../../api/services'
 import { useToast } from '../../components/ui/Toast'
-import { getErrorMessage } from '../../utils/helpers'
+import { getErrorMessage } from '../../utils/Helpers'
 
 export default function AdminForm({ onSuccess }) {
   const toast = useToast()

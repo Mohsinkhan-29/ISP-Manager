@@ -4,7 +4,7 @@ import { paymentsApi } from '../../api/services'
 import { useFetch } from '../../hooks/useFetch'
 import { Pagination } from '../../components/ui/Pagination'
 import { Modal } from '../../components/ui/Modal'
-import { formatDate, formatCurrency } from '../../utils/helpers'
+import { formatDate, formatCurrency } from '../../utils/Helpers'
 import PaymentForm from './PaymentForm'
 
 // ── Method badge ──────────────────────────────────────────────────────────────

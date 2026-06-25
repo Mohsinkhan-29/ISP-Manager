@@ -6,7 +6,7 @@ import { useToast } from '../../components/ui/Toast'
 import { Pagination } from '../../components/ui/Pagination'
 import { Modal } from '../../components/ui/Modal'
 import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
-import { formatDate, getErrorMessage } from '../../utils/helpers'
+import { formatDate, getErrorMessage } from '../../utils/Helpers'
 import CustomerForm from './CustomerForm'
 
 // ── Avatar initials ───────────────────────────────────────────────────────────
